@@ -6,36 +6,21 @@ window.addEventListener('scroll', () => {
     : 'rgba(255,255,255,0.06)';
 }, { passive: true });
 
-// Mobile nav toggle
+// Mobile nav toggle — class-based so it never fights the responsive CSS
 const toggle = document.querySelector('.nav-mobile-toggle');
 const navLinks = document.querySelector('.nav-links');
-let mobileNavOpen = false;
 if (toggle && navLinks) {
   toggle.addEventListener('click', () => {
-    mobileNavOpen = !mobileNavOpen;
-    if (mobileNavOpen) {
-      navLinks.style.cssText = `
-        display: flex;
-        flex-direction: column;
-        position: absolute;
-        top: 64px;
-        left: 0;
-        right: 0;
-        background: #1C1C1C;
-        padding: 20px 24px;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-        gap: 16px;
-        z-index: 99;
-      `;
-    } else {
-      navLinks.style.cssText = 'display: none;';
-    }
+    const open = navLinks.classList.toggle('nav-links--open');
+    toggle.classList.toggle('nav-mobile-toggle--open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
   });
   // Close on link click
   navLinks.querySelectorAll('a').forEach(a => {
     a.addEventListener('click', () => {
-      mobileNavOpen = false;
-      navLinks.style.cssText = 'display: none;';
+      navLinks.classList.remove('nav-links--open');
+      toggle.classList.remove('nav-mobile-toggle--open');
+      toggle.setAttribute('aria-expanded', 'false');
     });
   });
 }
